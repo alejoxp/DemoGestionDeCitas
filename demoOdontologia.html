@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OdontoCare - Gestión de Citas y Pagos</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Iconos Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Tipografía Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --aero-sky: #edf7ff;
+      --aero-ice: rgba(255,255,255,0.56);
+      --aero-card: rgba(255,255,255,0.62);
+      --aero-line: rgba(148, 163, 184, 0.22);
+      --aero-blue: #70b9ff;
+      --aero-cyan: #6ad9df;
+      --aero-teal: #2cc7c0;
+      --aero-deep: #1d3557;
+      --aero-shadow: 0 20px 50px rgba(77, 126, 179, 0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(112, 185, 255, 0.38), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(108, 217, 223, 0.32), transparent 24%),
+        linear-gradient(135deg, #eef9ff 0%, #edf4ff 32%, #f9f5ff 100%);
+      color: var(--aero-deep);
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 26rem;
+      height: 26rem;
+      border-radius: 9999px;
+      filter: blur(70px);
+      opacity: 0.38;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background: rgba(68, 194, 255, 0.22);
+      top: -8rem;
+      left: -5rem;
+    }
+
+    body::after {
+      background: rgba(140, 120, 255, 0.18);
+      right: -6rem;
+      bottom: -8rem;
+    }
+
+    .aero-panel {
+      background: rgba(255,255,255,0.52);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.55);
+      box-shadow: var(--aero-shadow);
+    }
+
+    .aero-soft {
+      background: linear-gradient(145deg, rgba(255,255,255,0.72), rgba(237,246,255,0.5));
+      border: 1px solid rgba(148,163,184,0.15);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .aero-button {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(51, 185, 199, 0.28);
+      background: linear-gradient(135deg, #3ac6c5 0%, #0ea5e9 100%);
+      box-shadow: 0 12px 30px rgba(58, 198, 197, 0.35);
+    }
+
+    .aero-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,0.35), transparent 35%, transparent 65%, rgba(255,255,255,0.18));
+      pointer-events: none;
+    }
+
+    .doctor-card {
+      background: rgba(255,255,255,0.52);
+      border: 1.5px solid rgba(148,163,184,0.22);
+      transition: all 0.25s ease;
+      box-shadow: 0 10px 22px rgba(148,163,184,0.08);
+    }
+
+    .doctor-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 24px rgba(72, 120, 170, 0.12);
+    }
+
+    .doctor-card.border-teal-500 {
+      background: linear-gradient(135deg, rgba(208,250,245,0.72), rgba(224,247,255,0.82));
+      border-color: rgba(45, 199, 192, 0.8) !important;
+      box-shadow: 0 16px 30px rgba(45, 199, 192, 0.18);
+    }
+
+    .time-slot-btn {
+      background: rgba(255,255,255,0.48);
+      border: 1px solid rgba(148,163,184,0.2);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .time-slot-btn:hover {
+      border-color: rgba(32, 201, 195, 0.8);
+      background: rgba(222, 247, 255, 0.8);
+    }
+
+    .time-slot-btn.border-teal-500 {
+      background: linear-gradient(135deg, #2cc7c0 0%, #0ea5e9 100%);
+      border-color: transparent !important;
+      box-shadow: 0 12px 28px rgba(21, 177, 186, 0.32);
+    }
+
+    .pay-method-btn {
+      background: rgba(255,255,255,0.48);
+      transition: all 0.2s ease;
+    }
+
+    .pay-method-btn.border-teal-500 {
+      background: linear-gradient(135deg, rgba(219,250,245,0.9), rgba(224,247,255,0.92));
+      box-shadow: 0 10px 22px rgba(45, 199, 192, 0.15);
+    }
+
+    .glass-input {
+      background: rgba(255,255,255,0.58);
+      border: 1px solid rgba(148,163,184,0.2);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .nav-glass {
+      background: rgba(255,255,255,0.46);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(148,163,184,0.18);
+    }
+
+    .hero-badge {
+      background: linear-gradient(135deg, rgba(208,250,245,0.92), rgba(224,247,255,0.8));
+      border: 1px solid rgba(94, 234, 212, 0.4);
+      box-shadow: 0 8px 18px rgba(103, 222, 236, 0.14);
+    }
+
+    .calendar-day-btn {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(148,163,184,0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .calendar-day-btn.selected {
+      background: linear-gradient(135deg, #2cc7c0 0%, #0ea5e9 100%);
+      box-shadow: 0 10px 24px rgba(14,165,233,0.25);
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Barra de Navegación -->
+  <header class="nav-glass sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-teal-500 text-white flex items-center justify-center text-xl shadow-teal-200 shadow-md">
+          <i class="fa-solid fa-tooth"></i>
+        </div>
+        <div>
+          <span class="font-extrabold text-xl tracking-tight text-slate-900">Odonto<span class="text-teal-600">Care</span></span>
+          <span class="text-xs ml-1 px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 font-semibold border border-teal-200">Demo</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+        <a href="#doctores" class="hover:text-teal-600 transition">Especialistas</a>
+        <a href="#agendar" class="hover:text-teal-600 transition">Agendar Cita</a>
+        <a href="#pagos" class="hover:text-teal-600 transition">Pagos</a>
+        <a href="#contacto" class="hover:text-teal-600 transition">Contacto</a>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <a href="#agendar" class="aero-button inline-flex items-center space-x-2 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-sm transition">
+          <i class="fa-regular fa-calendar-check"></i>
+          <span>Reservar Cita</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner Informativo -->
+  <section class="py-8 border-b border-slate-100/70">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <span class="hero-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-teal-800 mb-2">
+        <i class="fa-solid fa-sparkles text-teal-600"></i> Sistema Interactivo de Citas y Cobros
+      </span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        Reserva tu cita odontológica en línea
+      </h1>
+      <p class="mt-2 text-slate-600 text-sm max-w-xl mx-auto">
+        Selecciona a tu odontólogo tratante, consulta la disponibilidad en el calendario, registra tu forma de pago y obtén tu comprobante digital en PNG.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Columna Izquierda: Especialistas, Calendario y Datos (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- 1. Selección de Especialista -->
+        <section id="doctores" class="aero-panel rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-teal-100 text-teal-700 text-xs font-black flex items-center justify-center">1</span>
+              Selecciona tu Odontólogo
+            </h2>
+            <span class="text-xs text-slate-400">3 especialistas activos</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="doctor-list">
+            <!-- Doctor 1 -->
+            <label class="doctor-card relative flex flex-col p-4 rounded-xl border-2 border-teal-500 bg-teal-50/30 cursor-pointer transition">
+              <input type="radio" name="doctor" value="Dra. Mariana Rojas" data-specialty="Ortodoncia & Estética" data-fee="35" checked class="hidden">
+              <div class="w-10 h-10 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-lg font-bold mb-2">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+              <h3 class="font-bold text-sm text-slate-900">Dra. Mariana Rojas</h3>
+              <p class="text-xs text-teal-600 font-semibold mt-0.5">Ortodoncia</p>
+              <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span>Consulta:</span>
+                <span class="font-bold text-slate-800">$35.00</span>
+              </div>
+              <div class="check-icon absolute top-3 right-3 text-teal-600 text-sm">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </label>
+
+            <!-- Doctor 2 -->
+            <label class="doctor-card relative flex flex-col p-4 rounded-xl border-2 border-slate-200 bg-white cursor-pointer transition">
+              <input type="radio" name="doctor" value="Dr. Carlos Mendoza" data-specialty="Odontología General" data-fee="25" class="hidden">
+              <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-lg font-bold mb-2">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+              <h3 class="font-bold text-sm text-slate-900">Dr. Carlos Mendoza</h3>
+              <p class="text-xs text-blue-600 font-semibold mt-0.5">General & Limpieza</p>
+              <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span>Consulta:</span>
+                <span class="font-bold text-slate-800">$25.00</span>
+              </div>
+              <div class="check-icon absolute top-3 right-3 text-teal-600 text-sm hidden">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </label>
+
+            <!-- Doctor 3 -->
+            <label class="doctor-card relative flex flex-col p-4 rounded-xl border-2 border-slate-200 bg-white cursor-pointer transition">
+              <input type="radio" name="doctor" value="Dr. Alejandro Silva" data-specialty="Endodoncia & Cirugía" data-fee="45" class="hidden">
+              <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-lg font-bold mb-2">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+              <h3 class="font-bold text-sm text-slate-900">Dr. Alejandro Silva</h3>
+              <p class="text-xs text-purple-600 font-semibold mt-0.5">Endodoncia</p>
+              <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span>Consulta:</span>
+                <span class="font-bold text-slate-800">$45.00</span>
+              </div>
+              <div class="check-icon absolute top-3 right-3 text-teal-600 text-sm hidden">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <!-- 2. Calendario Interactivo -->
+        <section id="agendar" class="aero-panel rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-teal-100 text-teal-700 text-xs font-black flex items-center justify-center">2</span>
+              Fecha y Horario
+            </h2>
+            <span id="selected-date-badge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+              Seleccione día
+            </span>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <div class="flex items-center justify-between mb-3">
+              <button type="button" id="prev-month-btn" class="w-7 h-7 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition shadow-sm">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+              </button>
+              <span id="current-month-year" class="font-bold text-slate-800 text-sm capitalize">
+                Mes Año
+              </span>
+              <button type="button" id="next-month-btn" class="w-7 h-7 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition shadow-sm">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-slate-400 mb-1">
+              <div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div class="text-rose-400">Dom</div>
+            </div>
+
+            <!-- Grilla dinámica -->
+            <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
+          </div>
+
+          <!-- Bloques de Horarios -->
+          <div class="mt-4">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+              Turnos disponibles
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="time-slots">
+              <button type="button" class="time-slot-btn py-2 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-teal-500 transition" data-time="09:00 AM">
+                09:00 AM
+              </button>
+              <button type="button" class="time-slot-btn py-2 px-3 rounded-xl border-2 border-teal-500 bg-teal-500 text-white text-xs font-bold shadow-sm transition" data-time="10:30 AM">
+                10:30 AM
+              </button>
+              <button type="button" class="time-slot-btn py-2 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-teal-500 transition" data-time="02:00 PM">
+                02:00 PM
+              </button>
+              <button type="button" class="time-slot-btn py-2 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-teal-500 transition" data-time="03:30 PM">
+                03:30 PM
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Formulario de Paciente -->
+        <section class="aero-panel rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-teal-100 text-teal-700 text-xs font-black flex items-center justify-center">3</span>
+              Ficha del Paciente
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo</label>
+              <input type="text" id="patient-name" value="Alejandro Boada" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Cédula / Documento</label>
+              <input type="text" id="patient-id" value="V-28.450.123" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono</label>
+              <input type="tel" id="patient-phone" value="+58 412-5550199" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Tratamiento Requerido</label>
+              <select id="consultation-reason" class="glass-input w-full px-3 py-2 rounded-xl text-xs bg-white/70 focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                <option value="Evaluación General & Limpieza">Evaluación General & Limpieza</option>
+                <option value="Consulta de Ortodoncia / Brackets" selected>Consulta de Ortodoncia / Brackets</option>
+                <option value="Tratamiento de Conducto (Endodoncia)">Tratamiento de Conducto (Endodoncia)</option>
+                <option value="Blanqueamiento y Estética">Blanqueamiento y Estética</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Columna Derecha: Pago, Comprobante y Contacto (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- Caja de Resumen y Pago -->
+        <div id="pagos" class="aero-panel rounded-2xl p-6">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i class="fa-solid fa-receipt text-teal-600"></i> Resumen de la Consulta
+            </h3>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-semibold border border-amber-200">
+              Pendiente
+            </span>
+          </div>
+
+          <div class="py-3 space-y-2 text-xs">
+            <div class="flex justify-between items-center text-slate-600">
+              <span>Doctor(a):</span>
+              <span id="summary-doctor" class="font-semibold text-slate-800">Dra. Mariana Rojas</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-600">
+              <span>Especialidad:</span>
+              <span id="summary-specialty" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Ortodoncia & Estética</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-600">
+              <span>Fecha y Turno:</span>
+              <span id="summary-datetime" class="font-semibold text-teal-700">--</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-600">
+              <span>Paciente:</span>
+              <span id="summary-patient" class="font-medium text-slate-800">Alejandro Boada</span>
+            </div>
+            <div class="pt-2 border-t border-slate-100 flex justify-between items-baseline">
+              <span class="font-bold text-slate-700 text-sm">Arancel de Reserva:</span>
+              <span id="summary-fee" class="text-xl font-black text-slate-900">$35.00</span>
+            </div>
+          </div>
+
+          <!-- Opciones de Pago -->
+          <div class="mt-3 pt-3 border-t border-slate-100">
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+              Modalidad de Pago
+            </label>
+            <div class="grid grid-cols-3 gap-2 text-xs font-semibold mb-3">
+              <button type="button" class="pay-method-btn p-2 rounded-xl border-2 border-teal-500 bg-teal-50/50 text-teal-800 text-center transition flex flex-col items-center gap-1" data-method="Pago Móvil">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <span class="text-[11px]">Pago Móvil</span>
+              </button>
+              <button type="button" class="pay-method-btn p-2 rounded-xl border border-slate-200 text-slate-600 text-center transition flex flex-col items-center gap-1" data-method="Transferencia">
+                <i class="fa-solid fa-building-columns"></i>
+                <span class="text-[11px]">Transferencia</span>
+              </button>
+              <button type="button" class="pay-method-btn p-2 rounded-xl border border-slate-200 text-slate-600 text-center transition flex flex-col items-center gap-1" data-method="Zelle / Taquilla">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                <span class="text-[11px]">Zelle / Físico</span>
+              </button>
+            </div>
+
+            <!-- Datos genéricos según método -->
+            <div id="payment-details-box" class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] space-y-1 text-slate-600 mb-3">
+              <p class="font-bold text-slate-800 flex justify-between">
+                <span>Pago Móvil (Genérico):</span>
+                <span class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700 font-mono">Banesco (0134)</span>
+              </p>
+              <p>Teléfono: <span class="font-mono font-semibold text-slate-800">0412-000-0000</span></p>
+              <p>RIF: <span class="font-mono font-semibold text-slate-800">J-12345678-0</span></p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Nº de Referencia</label>
+              <input type="text" id="pay-reference" value="REF-984210" placeholder="Ej: 984210" class="glass-input w-full px-3 py-2 rounded-xl text-xs font-mono focus:ring-2 focus:ring-teal-500 focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Botón de Confirmación y Descarga de PNG -->
+          <div class="mt-5">
+            <button type="button" id="btn-confirm-and-download" class="aero-button w-full active:scale-[0.99] text-white py-3 px-4 rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-file-arrow-down text-sm"></i>
+              <span>Confirmar Cita y Guardar Pago (.PNG)</span>
+            </button>
+            <p class="text-[11px] text-center text-slate-400 mt-2">
+              Genera automáticamente el comprobante digital en alta resolución.
+            </p>
+          </div>
+        </div>
+
+        <!-- Contacto con Números Genéricos -->
+        <div id="contacto" class="bg-slate-900 text-white rounded-2xl p-5 shadow-sm text-xs">
+          <div class="flex items-center gap-2 mb-3 text-teal-400">
+            <i class="fa-solid fa-headset text-base"></i>
+            <h3 class="font-bold text-white text-sm">Canales de Atención Clínica</h3>
+          </div>
+          <p class="text-slate-300 text-[11px] mb-3">
+            Para urgencias odontológicas o dudas sobre tratamientos:
+          </p>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-800 border border-slate-700">
+              <div class="flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp text-emerald-400 text-base"></i>
+                <div>
+                  <div class="text-slate-400 text-[9px] uppercase font-bold">WhatsApp Recepción</div>
+                  <div class="font-mono font-bold text-slate-100">+58 (412) 000-0000</div>
+                </div>
+              </div>
+              <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
+                En línea
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-800 border border-slate-700">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-phone text-blue-400"></i>
+                <div>
+                  <div class="text-slate-400 text-[9px] uppercase font-bold">Central Telefónica</div>
+                  <div class="font-mono font-bold text-slate-100">+58 (293) 000-0000</div>
+                </div>
+              </div>
+              <span class="text-[10px] text-slate-400">8am - 6pm</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-slate-800 border border-slate-700 flex items-center gap-2">
+              <i class="fa-solid fa-location-dot text-rose-400"></i>
+              <div class="text-slate-300 text-[11px]">
+                Torre Médica Profesional, Piso 3, Consultorio 3-B
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal de Previsualización y Confirmación -->
+  <div id="success-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="aero-panel rounded-2xl max-w-sm w-full p-5 text-center">
+      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl mx-auto mb-3">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3 class="text-base font-bold text-slate-900">¡Cita Registrada!</h3>
+      <p class="text-xs text-slate-500 mt-1">El comprobante de tu cita y pago ha sido emitido en PNG.</p>
+
+      <div class="mt-3 p-1.5 bg-slate-100 rounded-xl border border-slate-200">
+        <img id="voucher-preview-img" alt="Vista previa del comprobante" class="w-full rounded shadow-sm">
+      </div>
+
+      <div class="mt-4 flex gap-2">
+        <button type="button" id="btn-download-again" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-3 rounded-xl text-xs transition">
+          <i class="fa-solid fa-download mr-1"></i> Re-descargar
+        </button>
+        <button type="button" onclick="closeModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-xl text-xs transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas Oculto para Generación del Comprobante PNG -->
+  <canvas id="voucher-canvas" width="800" height="1050" class="hidden"></canvas>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-xs text-slate-500">
+    <p>© 2026 OdontoCare Demo - Demostración funcional</p>
+  </footer>
+
+  <!-- Script de Comportamiento -->
+  <script>
+    const state = {
+      selectedDoctor: 'Dra. Mariana Rojas',
+      selectedSpecialty: 'Ortodoncia & Estética',
+      selectedFee: 35,
+      selectedDate: new Date(),
+      selectedTime: '10:30 AM',
+      selectedPayMethod: 'Pago Móvil',
+      currentCalendarDate: new Date()
+    };
+
+    const monthNames = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCalendar();
+      setupEvents();
+      updateSummary();
+    });
+
+    function setupEvents() {
+      // Cambio de doctor
+      document.querySelectorAll('input[name="doctor"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          document.querySelectorAll('.doctor-card').forEach(card => {
+            card.classList.remove('border-teal-500', 'bg-teal-50/30');
+            card.classList.add('border-slate-200', 'bg-white');
+            card.querySelector('.check-icon').classList.add('hidden');
+          });
+
+          const parent = e.target.closest('.doctor-card');
+          parent.classList.remove('border-slate-200', 'bg-white');
+          parent.classList.add('border-teal-500', 'bg-teal-50/30');
+          parent.querySelector('.check-icon').classList.remove('hidden');
+
+          state.selectedDoctor = e.target.value;
+          state.selectedSpecialty = e.target.dataset.specialty;
+          state.selectedFee = parseFloat(e.target.dataset.fee);
+          updateSummary();
+        });
+      });
+
+      // Navegación Calendario
+      document.getElementById('prev-month-btn').addEventListener('click', () => {
+        state.currentCalendarDate.setMonth(state.currentCalendarDate.getMonth() - 1);
+        renderCalendar();
+      });
+
+      document.getElementById('next-month-btn').addEventListener('click', () => {
+        state.currentCalendarDate.setMonth(state.currentCalendarDate.getMonth() + 1);
+        renderCalendar();
+      });
+
+      // Selección de turno
+      document.querySelectorAll('.time-slot-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.time-slot-btn').forEach(b => {
+            b.className = 'time-slot-btn py-2 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-teal-500 transition';
+          });
+          btn.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-teal-500 bg-teal-500 text-white text-xs font-bold shadow-sm transition';
+          state.selectedTime = btn.dataset.time;
+          updateSummary();
+        });
+      });
+
+      // Métodos de pago
+      document.querySelectorAll('.pay-method-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.pay-method-btn').forEach(b => {
+            b.classList.remove('border-teal-500', 'bg-teal-50/50', 'text-teal-800');
+            b.classList.add('border-slate-200', 'text-slate-600');
+          });
+          btn.classList.remove('border-slate-200', 'text-slate-600');
+          btn.classList.add('border-teal-500', 'bg-teal-50/50', 'text-teal-800');
+          state.selectedPayMethod = btn.dataset.method;
+          updatePaymentBox(btn.dataset.method);
+        });
+      });
+
+      document.getElementById('patient-name').addEventListener('input', updateSummary);
+      document.getElementById('btn-confirm-and-download').addEventListener('click', generateVoucherPNG);
+      document.getElementById('btn-download-again').addEventListener('click', downloadPNG);
+    }
+
+    function updatePaymentBox(method) {
+      const box = document.getElementById('payment-details-box');
+      if (method === 'Pago Móvil') {
+        box.innerHTML = `
+          <p class="font-bold text-slate-800 flex justify-between">
+            <span>Pago Móvil (Genérico):</span>
+            <span class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700 font-mono">Banesco (0134)</span>
+          </p>
+          <p>Teléfono: <span class="font-mono font-semibold text-slate-800">0412-000-0000</span></p>
+          <p>RIF: <span class="font-mono font-semibold text-slate-800">J-12345678-0</span></p>
+        `;
+      } else if (method === 'Transferencia') {
+        box.innerHTML = `
+          <p class="font-bold text-slate-800 flex justify-between">
+            <span>Transferencia Bancaria:</span>
+            <span class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700 font-mono">Banco Mercantil</span>
+          </p>
+          <p>Cuenta: <span class="font-mono font-semibold text-slate-800">0105-0000-00-0000000000</span></p>
+          <p>Beneficiario: <span class="font-semibold text-slate-800">OdontoCare Dental C.A.</span></p>
+        `;
+      } else {
+        box.innerHTML = `
+          <p class="font-bold text-slate-800">Zelle o Taquilla:</p>
+          <p>Correo Zelle: <span class="font-mono font-semibold text-slate-800">pagos@odontocare-demo.com</span></p>
+          <p class="text-[10px] text-slate-500">O cancelar directamente en taquilla el día de la cita.</p>
+        `;
+      }
+    }
+
+    function renderCalendar() {
+      const year = state.currentCalendarDate.getFullYear();
+      const month = state.currentCalendarDate.getMonth();
+      document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const startOffset = (firstDay === 0) ? 6 : firstDay - 1;
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const container = document.getElementById('calendar-days');
+      container.innerHTML = '';
+
+      for (let i = 0; i < startOffset; i++) {
+        const spacer = document.createElement('div');
+        spacer.className = 'h-8';
+        container.appendChild(spacer);
+      }
+
+      const today = new Date();
+      for (let d = 1; d <= totalDays; d++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const dateObj = new Date(year, month, d);
+        const isSunday = dateObj.getDay() === 0;
+        const isSelected = dateObj.toDateString() === state.selectedDate.toDateString();
+        const isPast = dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        let cls = 'h-8 w-full rounded-lg text-xs font-semibold flex items-center justify-center transition ';
+
+        if (isSunday || isPast) {
+          btn.className = cls + 'text-slate-300 cursor-not-allowed bg-slate-50';
+          btn.disabled = true;
+        } else if (isSelected) {
+          btn.className = cls + 'bg-teal-600 text-white font-bold shadow-md shadow-teal-500/20';
+        } else {
+          btn.className = cls + 'text-slate-700 hover:bg-teal-50 hover:text-teal-900 bg-white border border-slate-100';
+          btn.addEventListener('click', () => {
+            state.selectedDate = dateObj;
+            renderCalendar();
+            updateSummary();
+          });
+        }
+        btn.textContent = d;
+        container.appendChild(btn);
+      }
+    }
+
+    function formatDate(d) {
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    function updateSummary() {
+      document.getElementById('summary-doctor').textContent = state.selectedDoctor;
+      document.getElementById('summary-specialty').textContent = state.selectedSpecialty;
+      const dateStr = formatDate(state.selectedDate);
+      document.getElementById('summary-datetime').textContent = `${dateStr} - ${state.selectedTime}`;
+      document.getElementById('selected-date-badge').textContent = dateStr;
+
+      const pName = document.getElementById('patient-name').value.trim() || 'Paciente';
+      document.getElementById('summary-patient').textContent = pName;
+      document.getElementById('summary-fee').textContent = `$${state.selectedFee.toFixed(2)}`;
+    }
+
+    let generatedPNGUrl = null;
+
+    // Render del Comprobante en Canvas y Exportación a PNG
+    function generateVoucherPNG() {
+      const canvas = document.getElementById('voucher-canvas');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Fondo
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, w, h);
+
+      // Tarjeta
+      ctx.fillStyle = '#ffffff';
+      roundRect(ctx, 40, 40, w - 80, h - 80, 20, true, false);
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 2;
+      roundRect(ctx, 40, 40, w - 80, h - 80, 20, false, true);
+
+      // Cabecera Teal
+      ctx.fillStyle = '#0d9488';
+      ctx.beginPath();
+      ctx.moveTo(60, 40);
+      ctx.lineTo(w - 60, 40);
+      ctx.quadraticCurveTo(w - 40, 40, w - 40, 60);
+      ctx.lineTo(w - 40, 180);
+      ctx.lineTo(40, 180);
+      ctx.lineTo(40, 60);
+      ctx.quadraticCurveTo(40, 40, 60, 40);
+      ctx.closePath();
+      ctx.fill();
+
+      // Textos de Encabezado
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 32px Inter, sans-serif';
+      ctx.fillText('OdontoCare Dental Clinic', 80, 105);
+
+      ctx.fillStyle = '#ccfbf1';
+      ctx.font = '15px Inter, sans-serif';
+      ctx.fillText('COMPROBANTE OFICIAL DE CITA Y PAGO', 80, 138);
+
+      // Badge de estado
+      ctx.fillStyle = '#10b981';
+      roundRect(ctx, w - 240, 80, 160, 42, 10, true, false);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 14px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✓ CONFIRMADO', w - 160, 106);
+      ctx.textAlign = 'left';
+
+      // Código y Fecha
+      const code = 'ODC-' + Math.floor(100000 + Math.random() * 900000);
+      ctx.fillStyle = '#64748b';
+      ctx.font = '13px Inter, sans-serif';
+      ctx.fillText(`Cita ID: ${code}`, 80, 225);
+      ctx.fillText(`Emisión: ${new Date().toLocaleDateString('es-VE')}`, w - 300, 225);
+
+      // Divisoria
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.moveTo(80, 245);
+      ctx.lineTo(w - 80, 245);
+      ctx.stroke();
+
+      // Sección Paciente
+      drawHeading(ctx, 'DATOS DEL PACIENTE', 80, 280);
+      const name = document.getElementById('patient-name').value.trim() || 'Alejandro Boada';
+      const doc = document.getElementById('patient-id').value.trim() || 'V-28.450.123';
+      const phone = document.getElementById('patient-phone').value.trim() || '+58 412-5550199';
+      const reason = document.getElementById('consultation-reason').value;
+
+      drawRow(ctx, 'Paciente:', name, 80, 315);
+      drawRow(ctx, 'Cédula / ID:', doc, 440, 315);
+      drawRow(ctx, 'Teléfono:', phone, 80, 355);
+      drawRow(ctx, 'Tratamiento:', reason, 440, 355);
+
+      // Divisoria
+      ctx.beginPath();
+      ctx.moveTo(80, 395);
+      ctx.lineTo(w - 80, 395);
+      ctx.stroke();
+
+      // Sección Cita
+      drawHeading(ctx, 'DETALLES DE LA CITA', 80, 430);
+      drawRow(ctx, 'Especialista:', state.selectedDoctor, 80, 465);
+      drawRow(ctx, 'Especialidad:', state.selectedSpecialty, 440, 465);
+      drawRow(ctx, 'Fecha:', formatDate(state.selectedDate), 80, 505);
+      drawRow(ctx, 'Turno:', state.selectedTime, 440, 505);
+
+      // Divisoria
+      ctx.beginPath();
+      ctx.moveTo(80, 545);
+      ctx.lineTo(w - 80, 545);
+      ctx.stroke();
+
+      // Sección Pago
+      drawHeading(ctx, 'DETALLES DEL PAGO REGISTRADO', 80, 580);
+      const ref = document.getElementById('pay-reference').value.trim() || 'REF-984210';
+      drawRow(ctx, 'Método:', state.selectedPayMethod, 80, 615);
+      drawRow(ctx, 'Referencia:', ref, 440, 615);
+      drawRow(ctx, 'Estado:', 'Liquidado con éxito', 80, 655);
+
+      // Caja Total
+      ctx.fillStyle = '#f1f5f9';
+      roundRect(ctx, 440, 640, 280, 70, 10, true, false);
+      ctx.fillStyle = '#475569';
+      ctx.font = '12px Inter, sans-serif';
+      ctx.fillText('TOTAL ABONADO:', 455, 665);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 24px Inter, sans-serif';
+      ctx.fillText(`$${state.selectedFee.toFixed(2)} USD`, 455, 695);
+
+      // Divisoria
+      ctx.beginPath();
+      ctx.moveTo(80, 740);
+      ctx.lineTo(w - 80, 740);
+      ctx.stroke();
+
+      // Bloque de Contacto y QR en Comprobante
+      ctx.fillStyle = '#f8fafc';
+      roundRect(ctx, 80, 760, w - 160, 150, 14, true, false);
+      drawQR(ctx, 100, 775, 110);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 14px Inter, sans-serif';
+      ctx.fillText('Central OdontoCare (Soporte & Citas)', 240, 800);
+      ctx.fillStyle = '#64748b';
+      ctx.font = '12px Inter, sans-serif';
+      ctx.fillText('• WhatsApp: +58 (412) 000-0000', 240, 825);
+      ctx.fillText('• Central: +58 (293) 000-0000', 240, 850);
+      ctx.fillText('• Ubicación: Torre Médica Profesional, Piso 3, Consultorio 3-B', 240, 875);
+
+      // Pie
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Documento digital generado para fines de demostración por OdontoCare.', w / 2, 955);
+      ctx.textAlign = 'left';
+
+      // Exportar a PNG
+      generatedPNGUrl = canvas.toDataURL('image/png');
+      document.getElementById('voucher-preview-img').src = generatedPNGUrl;
+      document.getElementById('success-modal').classList.remove('hidden');
+
+      downloadPNG();
+    }
+
+    function downloadPNG() {
+      if (!generatedPNGUrl) return;
+      const link = document.createElement('a');
+      link.download = `comprobante_cita_${Date.now()}.png`;
+      link.href = generatedPNGUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function closeModal() {
+      document.getElementById('success-modal').classList.add('hidden');
+    }
+
+    function drawHeading(ctx, text, x, y) {
+      ctx.fillStyle = '#0d9488';
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.fillText(text, x, y);
+    }
+
+    function drawRow(ctx, label, val, x, y) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '12px Inter, sans-serif';
+      ctx.fillText(label, x, y);
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 13px Inter, sans-serif';
+      ctx.fillText(val, x + 120, y);
+    }
+
+    function roundRect(ctx, x, y, width, height, r, fill, stroke) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + width - r, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+      ctx.lineTo(x + width, y + height - r);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+      ctx.lineTo(x + r, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    function drawQR(ctx, x, y, size) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x, y, size, size);
+      ctx.strokeStyle = '#0f172a';
+      ctx.strokeRect(x, y, size, size);
+
+      function eye(px, py) {
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(px, py, 26, 26);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(px + 4, py + 4, 18, 18);
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(px + 8, py + 8, 10, 10);
+      }
+
+      eye(x + 6, y + 6);
+      eye(x + size - 32, y + 6);
+      eye(x + 6, y + size - 32);
+
+      ctx.fillStyle = '#0f172a';
+      for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 6; j++) {
+          if (Math.random() > 0.45) {
+            ctx.fillRect(x + 38 + i * 5, y + 38 + j * 5, 4, 4);
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
