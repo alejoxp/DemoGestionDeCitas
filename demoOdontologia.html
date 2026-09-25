@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OdontoCare - Gestión de Citas y Pagos</title>
+  <title>OdontoCare - Gestión Odontológica</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Iconos Font Awesome -->
@@ -183,11 +183,12 @@
         </div>
       </div>
 
-      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
-        <a href="#doctores" class="hover:text-teal-600 transition">Especialistas</a>
-        <a href="#agendar" class="hover:text-teal-600 transition">Agendar Cita</a>
-        <a href="#pagos" class="hover:text-teal-600 transition">Pagos</a>
-        <a href="#contacto" class="hover:text-teal-600 transition">Contacto</a>
+      <nav class="hidden lg:flex items-center gap-5 text-xs font-semibold text-slate-600">
+        <a href="#agendar" class="hover:text-teal-600 transition">Citas</a>
+        <a href="#pacientes" class="hover:text-teal-600 transition">Pacientes</a>
+        <a href="#historial" class="hover:text-teal-600 transition">Historial</a>
+        <a href="#tarifas" class="hover:text-teal-600 transition">Tarifas</a>
+        <a href="#finanzas" class="hover:text-teal-600 transition">Caja</a>
       </nav>
 
       <div class="flex items-center space-x-3">
@@ -203,20 +204,20 @@
   <section class="py-8 border-b border-slate-100/70">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <span class="hero-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-teal-800 mb-2">
-        <i class="fa-solid fa-sparkles text-teal-600"></i> Sistema Interactivo de Citas y Cobros
+        <i class="fa-solid fa-sparkles text-teal-600"></i> Panel clínico · Agenda · Caja
       </span>
       <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-        Reserva tu cita odontológica en línea
+        Gestión odontológica
       </h1>
       <p class="mt-2 text-slate-600 text-sm max-w-xl mx-auto">
-        Selecciona a tu odontólogo tratante, consulta la disponibilidad en el calendario, registra tu forma de pago y obtén tu comprobante digital en PNG.
+        Pacientes, fichas clínicas, odontograma, tratamientos, agenda y seguimiento de pagos en un solo lugar.
       </p>
     </div>
   </section>
 
   <!-- Contenedor Principal -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+  <main class="w-full min-w-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+    <div class="grid min-w-0 grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
       <!-- Columna Izquierda: Especialistas, Calendario y Datos (7 cols) -->
       <div class="lg:col-span-7 space-y-6">
@@ -337,6 +338,7 @@
                 03:30 PM
               </button>
             </div>
+            <p id="slot-availability" class="text-[11px] text-slate-500 mt-2" aria-live="polite"></p>
           </div>
         </section>
 
@@ -355,6 +357,10 @@
               <input type="text" id="patient-name" value="Alejandro Boada" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
             </div>
             <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Edad</label>
+              <input type="number" id="patient-age" min="0" max="120" placeholder="Ej. 32" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+            </div>
+            <div>
               <label class="block text-xs font-semibold text-slate-600 mb-1">Cédula / Documento</label>
               <input type="text" id="patient-id" value="V-28.450.123" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
             </div>
@@ -365,11 +371,33 @@
             <div>
               <label class="block text-xs font-semibold text-slate-600 mb-1">Tratamiento Requerido</label>
               <select id="consultation-reason" class="glass-input w-full px-3 py-2 rounded-xl text-xs bg-white/70 focus:ring-2 focus:ring-teal-500 focus:outline-none">
-                <option value="Evaluación General & Limpieza">Evaluación General & Limpieza</option>
-                <option value="Consulta de Ortodoncia / Brackets" selected>Consulta de Ortodoncia / Brackets</option>
-                <option value="Tratamiento de Conducto (Endodoncia)">Tratamiento de Conducto (Endodoncia)</option>
-                <option value="Blanqueamiento y Estética">Blanqueamiento y Estética</option>
+                <option value="Evaluación y limpieza" data-price="30">Evaluación y limpieza (+$30)</option>
+                <option value="Control de ortodoncia" data-price="20" selected>Control de ortodoncia (+$20)</option>
+                <option value="Instalación de brackets" data-price="220">Instalación de brackets (+$220)</option>
+                <option value="Endodoncia" data-price="160">Endodoncia (+$160)</option>
+                <option value="Blanqueamiento dental" data-price="110">Blanqueamiento dental (+$110)</option>
+                <option value="Extracción simple" data-price="55">Extracción simple (+$55)</option>
+                <option value="Aplicación de flúor" data-price="15">Aplicación de flúor (+$15)</option>
+                <option value="Sellantes por pieza" data-price="20">Sellantes por pieza (+$20)</option>
               </select>
+            </div>
+            <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Alergias</label>
+                <input type="text" id="patient-allergies" placeholder="Ninguna conocida" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Condiciones médicas</label>
+                <input type="text" id="patient-conditions" placeholder="Ej. hipertensión" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Medicamentos</label>
+                <input type="text" id="patient-medications" placeholder="Medicamentos actuales" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Contacto de emergencia</label>
+                <input type="text" id="patient-emergency" placeholder="Nombre y teléfono" class="glass-input w-full px-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+              </div>
             </div>
           </div>
         </section>
@@ -408,8 +436,11 @@
               <span id="summary-patient" class="font-medium text-slate-800">Alejandro Boada</span>
             </div>
             <div class="pt-2 border-t border-slate-100 flex justify-between items-baseline">
-              <span class="font-bold text-slate-700 text-sm">Arancel de Reserva:</span>
+              <span class="font-bold text-slate-700 text-sm">Total estimado:</span>
               <span id="summary-fee" class="text-xl font-black text-slate-900">$35.00</span>
+            </div>
+            <div class="flex justify-between text-[11px] text-slate-500">
+              <span id="summary-price-breakdown">Consulta $35 + tratamiento $20</span>
             </div>
           </div>
 
@@ -445,7 +476,7 @@
 
             <div>
               <label class="block text-xs font-semibold text-slate-600 mb-1">Nº de Referencia</label>
-              <input type="text" id="pay-reference" value="REF-984210" placeholder="Ej: 984210" class="glass-input w-full px-3 py-2 rounded-xl text-xs font-mono focus:ring-2 focus:ring-teal-500 focus:outline-none">
+              <input type="text" id="pay-reference" placeholder="Ej: 984210" class="glass-input w-full px-3 py-2 rounded-xl text-xs font-mono focus:ring-2 focus:ring-teal-500 focus:outline-none">
             </div>
           </div>
 
@@ -453,8 +484,10 @@
           <div class="mt-5">
             <button type="button" id="btn-confirm-and-download" class="aero-button w-full active:scale-[0.99] text-white py-3 px-4 rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
               <i class="fa-solid fa-file-arrow-down text-sm"></i>
-              <span>Confirmar Cita y Guardar Pago (.PNG)</span>
+              <span id="booking-button-label">Confirmar cita y generar comprobante</span>
             </button>
+            <button type="button" id="cancel-edit-booking" class="hidden w-full mt-2 text-xs font-semibold text-slate-500 hover:text-slate-800">Salir de edición</button>
+            <p id="booking-edit-note" class="hidden text-[10px] text-amber-700 text-center mt-2">Esta cita ya tiene un pago registrado; solo se puede cambiar fecha y horario.</p>
             <p class="text-[11px] text-center text-slate-400 mt-2">
               Genera automáticamente el comprobante digital en alta resolución.
             </p>
@@ -508,6 +541,167 @@
       </div>
 
     </div>
+
+    <section id="historial" class="aero-panel rounded-2xl p-6 mt-8" aria-labelledby="history-title">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 id="history-title" class="text-base font-bold text-slate-900">Historial médico</h2>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-semibold border border-amber-200">Datos de ejemplo</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">Consultas y tratamientos registrados por paciente.</p>
+        </div>
+        <label class="relative w-full sm:w-72">
+          <span class="sr-only">Buscar paciente, tratamiento o especialista</span>
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" aria-hidden="true"></i>
+          <input id="history-search" type="search" placeholder="Buscar paciente o tratamiento" class="glass-input w-full pl-9 pr-3 py-2 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none">
+        </label>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-slate-200/80">
+        <table class="w-full min-w-[720px] text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 uppercase tracking-wide text-[10px]">
+            <tr>
+              <th scope="col" class="px-4 py-3 font-bold">Paciente</th>
+              <th scope="col" class="px-4 py-3 font-bold">Edad</th>
+              <th scope="col" class="px-4 py-3 font-bold">Tratamiento</th>
+              <th scope="col" class="px-4 py-3 font-bold">Especialista</th>
+              <th scope="col" class="px-4 py-3 font-bold">Última visita</th>
+            </tr>
+          </thead>
+          <tbody id="history-rows" class="divide-y divide-slate-100 bg-white/60 text-slate-700">
+          </tbody>
+        </table>
+        <p id="history-empty" class="hidden px-4 py-6 text-center text-xs text-slate-500">No se encontraron pacientes con esa búsqueda.</p>
+      </div>
+      <p id="history-count" class="text-[11px] text-slate-400 mt-3">5 pacientes de ejemplo</p>
+    </section>
+
+    <section id="pacientes" class="aero-panel rounded-2xl p-6 mt-8" aria-labelledby="patients-title">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+        <div>
+          <h2 id="patients-title" class="text-base font-bold text-slate-900">Pacientes y ficha clínica</h2>
+          <p class="text-xs text-slate-500 mt-1">Datos de salud, odontograma y evolución de cada visita.</p>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" id="backup-button" class="aero-soft inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-teal-700">
+            <i class="fa-solid fa-download" aria-hidden="true"></i> Exportar
+          </button>
+          <button type="button" id="restore-backup-button" class="aero-soft inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-teal-700">
+            <i class="fa-solid fa-upload" aria-hidden="true"></i> Restaurar
+          </button>
+          <input id="restore-backup-file" type="file" accept="application/json,.json" class="hidden">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
+        <form id="new-patient-form" class="lg:col-span-2 rounded-xl border border-white/80 bg-white/45 p-4 space-y-3">
+          <h3 class="text-sm font-bold text-slate-800">Registrar paciente</h3>
+          <input id="new-patient-name" required placeholder="Nombre completo" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <input id="new-patient-age" required type="number" min="0" max="120" placeholder="Edad" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+            <input id="new-patient-phone" placeholder="Teléfono" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+          </div>
+          <input id="new-patient-id" placeholder="Documento (opcional)" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+          <input id="new-patient-allergies" placeholder="Alergias" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+          <input id="new-patient-conditions" placeholder="Condiciones médicas" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+          <input id="new-patient-medications" placeholder="Medicamentos actuales" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+          <input id="new-patient-emergency" placeholder="Contacto de emergencia" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+          <button type="submit" class="aero-button w-full text-white px-4 py-2 rounded-lg text-xs font-bold">Guardar ficha</button>
+          <button type="button" id="cancel-patient-edit" class="hidden w-full text-xs font-semibold text-slate-500 hover:text-slate-800">Cancelar edición</button>
+        </form>
+
+        <div class="lg:col-span-3 min-w-0">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <h3 class="text-sm font-bold text-slate-800">Directorio <span id="patient-total" class="text-xs font-medium text-slate-400"></span></h3>
+            <input id="patient-search" type="search" placeholder="Buscar por nombre o documento" class="glass-input w-full sm:w-64 px-3 py-2 rounded-lg text-xs">
+          </div>
+          <div id="patient-list" class="max-h-72 overflow-y-auto divide-y divide-slate-100 rounded-xl border border-slate-200/70 bg-white/40"></div>
+          <p id="patient-empty" class="hidden text-xs text-slate-500 text-center py-5">No hay pacientes que coincidan.</p>
+        </div>
+      </div>
+
+      <div class="mt-6 border-t border-slate-200/70 pt-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800">Odontograma y evolución</h3>
+            <p class="text-[11px] text-slate-500 mt-1">Selecciona piezas para documentar la nota clínica.</p>
+          </div>
+          <select id="clinical-patient" class="glass-input w-full sm:w-72 px-3 py-2 rounded-lg text-xs"></select>
+        </div>
+        <div id="clinical-alerts" class="hidden mb-3 rounded-lg border border-amber-200 bg-amber-50/80 px-3 py-2 text-xs text-amber-800"></div>
+        <div id="odontogram" class="grid grid-cols-8 sm:grid-cols-16 gap-1.5 mb-4" aria-label="Odontograma dental"></div>
+        <label for="clinical-note" class="block text-xs font-semibold text-slate-600 mb-1">Nota de evolución</label>
+        <textarea id="clinical-note" rows="3" placeholder="Diagnóstico, procedimiento realizado y plan de seguimiento" class="glass-input w-full px-3 py-2 rounded-lg text-xs resize-y"></textarea>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+          <div class="sm:col-span-2">
+            <label for="clinical-plan" class="block text-xs font-semibold text-slate-600 mb-1">Plan de tratamiento</label>
+            <textarea id="clinical-plan" rows="2" placeholder="Procedimientos recomendados y sesiones pendientes" class="glass-input w-full px-3 py-2 rounded-lg text-xs resize-y"></textarea>
+          </div>
+          <div>
+            <label for="clinical-follow-up" class="block text-xs font-semibold text-slate-600 mb-1">Próximo control</label>
+            <input id="clinical-follow-up" type="date" class="glass-input w-full px-3 py-2 rounded-lg text-xs">
+          </div>
+        </div>
+        <div class="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <p id="selected-teeth" class="text-[11px] text-slate-500">Piezas seleccionadas: ninguna</p>
+          <button type="button" id="save-clinical-note" class="aero-button px-4 py-2 rounded-lg text-xs font-bold text-white">Guardar evolución</button>
+        </div>
+        <p id="clinical-save-status" class="text-[11px] text-teal-700 mt-2" aria-live="polite"></p>
+        <div id="clinical-timeline" class="mt-4 space-y-2"></div>
+      </div>
+    </section>
+
+    <section id="agenda-registros" class="aero-panel rounded-2xl p-6 mt-8" aria-labelledby="appointments-title">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 id="appointments-title" class="text-base font-bold text-slate-900">Agenda de citas</h2>
+          <p class="text-xs text-slate-500 mt-1">Actualiza el estado de cada reserva.</p>
+        </div>
+        <span id="appointment-total" class="text-xs text-slate-400"></span>
+      </div>
+      <div class="overflow-x-auto rounded-xl border border-slate-200/80">
+        <table class="w-full min-w-[760px] text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 uppercase text-[10px]"><tr><th class="px-4 py-3">Fecha</th><th class="px-4 py-3">Paciente</th><th class="px-4 py-3">Tratamiento</th><th class="px-4 py-3">Especialista</th><th class="px-4 py-3">Total</th><th class="px-4 py-3">Estado</th><th class="px-4 py-3">Acciones</th></tr></thead>
+          <tbody id="appointment-rows" class="divide-y divide-slate-100 bg-white/60 text-slate-700"></tbody>
+        </table>
+        <p id="appointment-empty" class="hidden px-4 py-6 text-center text-xs text-slate-500">Todavía no hay citas registradas.</p>
+      </div>
+    </section>
+
+    <section id="tarifas" class="aero-panel rounded-2xl p-6 mt-8" aria-labelledby="prices-title">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <div><h2 id="prices-title" class="text-base font-bold text-slate-900">Servicios y tarifas</h2><p class="text-xs text-slate-500 mt-1">Precios de demostración en USD; el total incluye consulta del especialista.</p></div>
+        <i class="fa-solid fa-tags text-teal-600 text-lg" aria-hidden="true"></i>
+      </div>
+      <div id="price-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2"></div>
+    </section>
+
+    <section id="finanzas" class="aero-panel rounded-2xl p-6 mt-8" aria-labelledby="finance-title">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div><h2 id="finance-title" class="text-base font-bold text-slate-900">Caja y pagos</h2><p class="text-xs text-slate-500 mt-1">Los cobros se registran manualmente en esta demo.</p></div>
+        <select id="finance-filter" class="glass-input px-3 py-2 rounded-lg text-xs"><option value="all">Todos los pagos</option><option value="Pendiente">Pendientes</option><option value="Pagado">Pagados</option><option value="Anulado">Anulados</option></select>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+        <div class="aero-soft rounded-xl p-4"><p class="text-[10px] uppercase font-bold text-slate-500">Ingresos pagados</p><p id="finance-paid" class="text-xl font-extrabold text-emerald-700 mt-1">$0.00</p></div>
+        <div class="aero-soft rounded-xl p-4"><p class="text-[10px] uppercase font-bold text-slate-500">Por cobrar</p><p id="finance-pending" class="text-xl font-extrabold text-amber-700 mt-1">$0.00</p></div>
+        <div class="aero-soft rounded-xl p-4"><p class="text-[10px] uppercase font-bold text-slate-500">Operaciones</p><p id="finance-count" class="text-xl font-extrabold text-slate-800 mt-1">0</p></div>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <label class="text-xs font-semibold text-slate-600 flex items-center gap-2">Mes del informe <input id="report-month" type="month" class="glass-input rounded-lg px-3 py-2 text-xs"></label>
+        <button type="button" id="export-report" class="aero-soft inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-teal-700"><i class="fa-solid fa-file-csv" aria-hidden="true"></i> Exportar informe CSV</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+        <div class="aero-soft rounded-xl p-4"><p class="text-[10px] uppercase font-bold text-slate-500">Citas del periodo</p><p id="report-appointments" class="text-lg font-extrabold text-slate-800 mt-1">0</p></div>
+        <div class="aero-soft rounded-xl p-4"><p class="text-[10px] uppercase font-bold text-slate-500">Atendidas</p><p id="report-completed" class="text-lg font-extrabold text-teal-700 mt-1">0</p></div>
+        <div class="aero-soft rounded-xl p-4"><p class="text-[10px] uppercase font-bold text-slate-500">Pacientes únicos</p><p id="report-patients" class="text-lg font-extrabold text-slate-800 mt-1">0</p></div>
+      </div>
+      <div class="overflow-x-auto rounded-xl border border-slate-200/80">
+        <table class="w-full min-w-[680px] text-left text-xs"><thead class="bg-slate-50 text-slate-500 uppercase text-[10px]"><tr><th class="px-4 py-3">Paciente</th><th class="px-4 py-3">Concepto</th><th class="px-4 py-3">Método</th><th class="px-4 py-3">Importe</th><th class="px-4 py-3">Estado</th><th class="px-4 py-3">Acción</th></tr></thead><tbody id="payment-rows" class="divide-y divide-slate-100 bg-white/60 text-slate-700"></tbody></table>
+        <p id="payment-empty" class="hidden px-4 py-6 text-center text-xs text-slate-500">No hay pagos para este filtro.</p>
+      </div>
+      <p class="mt-4 text-[11px] text-slate-500"><i class="fa-solid fa-shield-halved mr-1 text-teal-600" aria-hidden="true"></i>Datos guardados en este navegador. No uses información clínica real: esta demo no tiene autenticación ni almacenamiento seguro.</p>
+    </section>
   </main>
 
   <!-- Modal de Previsualización y Confirmación -->
@@ -517,7 +711,7 @@
         <i class="fa-solid fa-check"></i>
       </div>
       <h3 class="text-base font-bold text-slate-900">¡Cita Registrada!</h3>
-      <p class="text-xs text-slate-500 mt-1">El comprobante de tu cita y pago ha sido emitido en PNG.</p>
+      <p class="text-xs text-slate-500 mt-1">La cita quedó registrada y el pago aparece como pendiente en caja.</p>
 
       <div class="mt-3 p-1.5 bg-slate-100 rounded-xl border border-slate-200">
         <img id="voucher-preview-img" alt="Vista previa del comprobante" class="w-full rounded shadow-sm">
@@ -548,11 +742,85 @@
       selectedDoctor: 'Dra. Mariana Rojas',
       selectedSpecialty: 'Ortodoncia & Estética',
       selectedFee: 35,
+      selectedTreatmentPrice: 20,
       selectedDate: new Date(),
       selectedTime: '10:30 AM',
       selectedPayMethod: 'Pago Móvil',
-      currentCalendarDate: new Date()
+      currentCalendarDate: new Date(),
+      selectedTeeth: new Set(),
+      selectedClinicalPatientId: null,
+      editingAppointmentId: null,
+      editingPatientId: null
     };
+
+    const storageKey = 'odontocare-demo-v2';
+    const toothNumbers = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28, 48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+    const treatmentCatalog = [
+      { name: 'Evaluación y limpieza', price: 30 },
+      { name: 'Control de ortodoncia', price: 20 },
+      { name: 'Instalación de brackets', price: 220 },
+      { name: 'Endodoncia', price: 160 },
+      { name: 'Blanqueamiento dental', price: 110 },
+      { name: 'Extracción simple', price: 55 },
+      { name: 'Aplicación de flúor', price: 15 },
+      { name: 'Sellantes por pieza', price: 20 }
+    ];
+
+    function makeDemoDate(offset) {
+      const date = new Date();
+      date.setDate(date.getDate() + offset);
+      if (date.getDay() === 0) date.setDate(date.getDate() + 1);
+      return localISODate(date);
+    }
+
+    function localISODate(date = new Date()) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function createDemoData() {
+      const patients = [
+        { id: 'EJ-001', name: 'Valentina Pérez', age: 12, phone: '0412-555-0101', document: 'EJ-001', allergies: 'Ninguna conocida', conditions: 'Ninguna', medications: 'Ninguno', treatment: 'Control de ortodoncia', doctor: 'Dra. Mariana Rojas', lastVisit: '2026-09-12', notes: [] },
+        { id: 'EJ-002', name: 'Andrés Salazar', age: 34, phone: '0412-555-0102', document: 'EJ-002', allergies: 'Penicilina', conditions: 'Ninguna', medications: 'Ninguno', treatment: 'Evaluación y limpieza', doctor: 'Dr. Carlos Mendoza', lastVisit: '2026-09-08', notes: [] },
+        { id: 'EJ-003', name: 'Camila Torres', age: 27, phone: '0412-555-0103', document: 'EJ-003', allergies: 'Ninguna conocida', conditions: 'Asma', medications: 'Inhalador de rescate', treatment: 'Endodoncia', doctor: 'Dr. Alejandro Silva', lastVisit: '2026-09-03', notes: [] },
+        { id: 'EJ-004', name: 'Mateo Rodríguez', age: 8, phone: '0412-555-0104', document: 'EJ-004', allergies: 'Ninguna conocida', conditions: 'Ninguna', medications: 'Ninguno', treatment: 'Aplicación de flúor', doctor: 'Dr. Carlos Mendoza', lastVisit: '2026-08-28', notes: [] },
+        { id: 'EJ-005', name: 'Sofía Herrera', age: 45, phone: '0412-555-0105', document: 'EJ-005', allergies: 'Látex', conditions: 'Hipertensión controlada', medications: 'Losartán', treatment: 'Blanqueamiento dental', doctor: 'Dra. Mariana Rojas', lastVisit: '2026-08-21', notes: [] }
+      ];
+      const appointments = [
+        { id: 'CITA-EJ-01', patientId: 'EJ-001', patientName: 'Valentina Pérez', doctor: 'Dra. Mariana Rojas', treatment: 'Control de ortodoncia', price: 55, date: makeDemoDate(1), time: '09:00 AM', status: 'Confirmada' },
+        { id: 'CITA-EJ-02', patientId: 'EJ-002', patientName: 'Andrés Salazar', doctor: 'Dr. Carlos Mendoza', treatment: 'Evaluación y limpieza', price: 55, date: makeDemoDate(1), time: '10:30 AM', status: 'Confirmada' },
+        { id: 'CITA-EJ-03', patientId: 'EJ-003', patientName: 'Camila Torres', doctor: 'Dr. Alejandro Silva', treatment: 'Endodoncia', price: 205, date: makeDemoDate(2), time: '02:00 PM', status: 'Confirmada' }
+      ];
+      const payments = [
+        { id: 'PAGO-EJ-01', appointmentId: 'CITA-EJ-01', patientId: 'EJ-001', patientName: 'Valentina Pérez', concept: 'Control de ortodoncia', amount: 55, method: 'Pago Móvil', status: 'Pagado', reference: 'DEMO-001' },
+        { id: 'PAGO-EJ-02', appointmentId: 'CITA-EJ-02', patientId: 'EJ-002', patientName: 'Andrés Salazar', concept: 'Evaluación y limpieza', amount: 55, method: 'Transferencia', status: 'Pendiente', reference: '' },
+        { id: 'PAGO-EJ-03', appointmentId: 'CITA-EJ-03', patientId: 'EJ-003', patientName: 'Camila Torres', concept: 'Endodoncia', amount: 205, method: 'Zelle / Taquilla', status: 'Pendiente', reference: '' }
+      ];
+      return { patients, appointments, payments };
+    }
+
+    function loadClinicData() {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed.patients) && Array.isArray(parsed.appointments) && Array.isArray(parsed.payments)) return parsed;
+        }
+      } catch (error) {
+        console.warn('No se pudo leer el almacenamiento local de la demo.', error);
+      }
+      const initialData = createDemoData();
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(initialData));
+      } catch (error) {
+        console.warn('El navegador no permite guardar los datos de esta demo.', error);
+      }
+      return initialData;
+    }
+
+    const clinicData = loadClinicData();
 
     const monthNames = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -560,8 +828,10 @@
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('report-month').value = localISODate().slice(0, 7);
       renderCalendar();
       setupEvents();
+      renderAll();
       updateSummary();
     });
 
@@ -583,6 +853,7 @@
           state.selectedDoctor = e.target.value;
           state.selectedSpecialty = e.target.dataset.specialty;
           state.selectedFee = parseFloat(e.target.dataset.fee);
+          refreshBookedSlots();
           updateSummary();
         });
       });
@@ -625,8 +896,641 @@
       });
 
       document.getElementById('patient-name').addEventListener('input', updateSummary);
-      document.getElementById('btn-confirm-and-download').addEventListener('click', generateVoucherPNG);
+      document.getElementById('history-search').addEventListener('input', filterHistory);
+      document.getElementById('consultation-reason').addEventListener('change', event => {
+        state.selectedTreatmentPrice = Number(event.target.selectedOptions[0].dataset.price || 0);
+        updateSummary();
+      });
+      document.getElementById('new-patient-form').addEventListener('submit', registerPatient);
+      document.getElementById('cancel-patient-edit').addEventListener('click', cancelPatientEdit);
+      document.getElementById('patient-search').addEventListener('input', renderPatients);
+      document.getElementById('patient-list').addEventListener('click', selectPatientFromList);
+      document.getElementById('clinical-patient').addEventListener('change', event => {
+        state.selectedClinicalPatientId = event.target.value;
+        state.selectedTeeth.clear();
+        renderClinicalRecord();
+      });
+      document.getElementById('odontogram').addEventListener('click', toggleTooth);
+      document.getElementById('save-clinical-note').addEventListener('click', saveClinicalNote);
+      document.getElementById('appointment-rows').addEventListener('change', updateAppointmentStatus);
+      document.getElementById('appointment-rows').addEventListener('click', editAppointment);
+      document.getElementById('payment-rows').addEventListener('click', updatePaymentStatus);
+      document.getElementById('finance-filter').addEventListener('change', renderFinances);
+      document.getElementById('report-month').addEventListener('change', renderFinances);
+      document.getElementById('export-report').addEventListener('click', exportFinanceReport);
+      document.getElementById('backup-button').addEventListener('click', exportBackup);
+      document.getElementById('restore-backup-button').addEventListener('click', () => document.getElementById('restore-backup-file').click());
+      document.getElementById('restore-backup-file').addEventListener('change', importBackup);
+      document.getElementById('cancel-edit-booking').addEventListener('click', cancelBookingEdit);
+      document.getElementById('btn-confirm-and-download').addEventListener('click', saveBookingAndGenerateVoucher);
       document.getElementById('btn-download-again').addEventListener('click', downloadPNG);
+    }
+
+    function filterHistory(event) {
+      renderHistory(event.target.value);
+    }
+
+    function saveClinicData() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(clinicData));
+        return true;
+      } catch (error) {
+        console.error('No se pudieron guardar los datos de la demo.', error);
+        window.alert('No se pudieron guardar los datos en este navegador.');
+        return false;
+      }
+    }
+
+    function makeRecordId(prefix) {
+      return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+    }
+
+    function formatMoney(amount) {
+      return `$${Number(amount || 0).toFixed(2)}`;
+    }
+
+    function displayDate(dateValue) {
+      if (!dateValue) return 'Sin visitas';
+      const date = new Date(`${dateValue}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? dateValue : date.toLocaleDateString('es-VE');
+    }
+
+    function createCell(text, className = 'px-4 py-3') {
+      const cell = document.createElement('td');
+      cell.className = className;
+      cell.textContent = text;
+      return cell;
+    }
+
+    function renderAll() {
+      if (!state.selectedClinicalPatientId && clinicData.patients.length) state.selectedClinicalPatientId = clinicData.patients[0].id;
+      renderHistory();
+      renderPatients();
+      renderClinicalRecord();
+      renderAppointments();
+      renderPrices();
+      renderFinances();
+      refreshBookedSlots();
+    }
+
+    function renderHistory(search = document.getElementById('history-search').value) {
+      const query = search.trim().toLocaleLowerCase('es');
+      const body = document.getElementById('history-rows');
+      body.replaceChildren();
+      const patients = clinicData.patients.filter(patient => `${patient.name} ${patient.document} ${patient.treatment || ''} ${patient.doctor || ''}`.toLocaleLowerCase('es').includes(query));
+
+      patients.forEach(patient => {
+        const row = document.createElement('tr');
+        row.append(
+          createCell(patient.name, 'px-4 py-3 font-semibold text-slate-900'),
+          createCell(`${patient.age ?? '—'} años`),
+          createCell(patient.treatment || 'Sin tratamiento registrado'),
+          createCell(patient.doctor || 'Por asignar'),
+          createCell(displayDate(patient.lastVisit))
+        );
+        body.appendChild(row);
+      });
+      document.getElementById('history-empty').classList.toggle('hidden', patients.length > 0);
+      document.getElementById('history-count').textContent = `${patients.length} de ${clinicData.patients.length} pacientes`;
+    }
+
+    function renderPatients() {
+      const query = document.getElementById('patient-search').value.trim().toLocaleLowerCase('es');
+      const list = document.getElementById('patient-list');
+      list.replaceChildren();
+      const patients = clinicData.patients.filter(patient => `${patient.name} ${patient.document || ''}`.toLocaleLowerCase('es').includes(query));
+      document.getElementById('patient-total').textContent = `(${clinicData.patients.length})`;
+
+      patients.forEach(patient => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between gap-3 px-3 py-2.5';
+        const details = document.createElement('div');
+        details.className = 'min-w-0';
+        const name = document.createElement('p');
+        name.className = 'text-xs font-semibold text-slate-800 truncate';
+        name.textContent = patient.name;
+        const subline = document.createElement('p');
+        subline.className = 'text-[10px] text-slate-500 mt-0.5';
+        subline.textContent = `${patient.age ?? '—'} años · ${patient.document || 'Sin documento'}`;
+        details.append(name, subline);
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.patientId = patient.id;
+        button.className = 'shrink-0 text-[11px] font-semibold text-teal-700 hover:text-teal-900 px-2 py-1';
+        button.textContent = 'Abrir ficha';
+        const editButton = document.createElement('button');
+        editButton.type = 'button';
+        editButton.dataset.editPatientId = patient.id;
+        editButton.className = 'shrink-0 text-[11px] font-semibold text-slate-500 hover:text-teal-700 px-2 py-1';
+        editButton.textContent = 'Editar';
+        const actions = document.createElement('div');
+        actions.className = 'flex shrink-0 items-center';
+        actions.append(button, editButton);
+        row.append(details, actions);
+        list.appendChild(row);
+      });
+      document.getElementById('patient-empty').classList.toggle('hidden', patients.length > 0);
+    }
+
+    function registerPatient(event) {
+      event.preventDefault();
+      const documentNumber = document.getElementById('new-patient-id').value.trim();
+      if (documentNumber && clinicData.patients.some(patient => patient.id !== state.editingPatientId && patient.document.toLocaleLowerCase('es') === documentNumber.toLocaleLowerCase('es'))) {
+        window.alert('Ya existe un paciente con ese documento.');
+        return;
+      }
+
+      const patient = {
+        id: documentNumber || makeRecordId('PAC'),
+        name: document.getElementById('new-patient-name').value.trim(),
+        age: Number(document.getElementById('new-patient-age').value),
+        phone: document.getElementById('new-patient-phone').value.trim(),
+        document: documentNumber || 'Sin documento',
+        allergies: document.getElementById('new-patient-allergies').value.trim() || 'No indicado',
+        conditions: document.getElementById('new-patient-conditions').value.trim() || 'No indicado',
+        medications: document.getElementById('new-patient-medications').value.trim() || 'No indicado',
+        emergency: document.getElementById('new-patient-emergency').value.trim() || 'No indicado'
+      };
+      let savedPatientId = patient.id;
+      if (state.editingPatientId) {
+        const existingPatient = clinicData.patients.find(item => item.id === state.editingPatientId);
+        if (existingPatient) {
+          savedPatientId = existingPatient.id;
+          Object.assign(existingPatient, patient, { id: savedPatientId });
+          clinicData.appointments.filter(item => item.patientId === existingPatient.id).forEach(item => { item.patientName = existingPatient.name; });
+          clinicData.payments.filter(item => item.patientId === existingPatient.id).forEach(item => { item.patientName = existingPatient.name; });
+        }
+      } else {
+        clinicData.patients.push({ ...patient, treatment: '', doctor: '', lastVisit: '', notes: [] });
+      }
+      state.selectedClinicalPatientId = savedPatientId;
+      saveClinicData();
+      event.target.reset();
+      state.editingPatientId = null;
+      document.getElementById('cancel-patient-edit').classList.add('hidden');
+      renderAll();
+    }
+
+    function selectPatientFromList(event) {
+      const button = event.target.closest('button[data-patient-id]');
+      const editButton = event.target.closest('button[data-edit-patient-id]');
+      if (!button && !editButton) return;
+      const patientId = (button || editButton).dataset.patientId || editButton.dataset.editPatientId;
+      state.selectedClinicalPatientId = patientId;
+      state.selectedTeeth.clear();
+      renderClinicalRecord();
+      if (editButton) {
+        const patient = clinicData.patients.find(item => item.id === patientId);
+        if (!patient) return;
+        state.editingPatientId = patient.id;
+        document.getElementById('new-patient-name').value = patient.name;
+        document.getElementById('new-patient-age').value = patient.age ?? '';
+        document.getElementById('new-patient-phone').value = patient.phone || '';
+        document.getElementById('new-patient-id').value = patient.document === 'Sin documento' ? '' : patient.document;
+        document.getElementById('new-patient-allergies').value = patient.allergies || '';
+        document.getElementById('new-patient-conditions').value = patient.conditions || '';
+        document.getElementById('new-patient-medications').value = patient.medications || '';
+        document.getElementById('new-patient-emergency').value = patient.emergency || '';
+        document.querySelector('#new-patient-form h3').textContent = 'Editar ficha del paciente';
+        document.querySelector('#new-patient-form button[type="submit"]').textContent = 'Guardar cambios';
+        document.getElementById('cancel-patient-edit').classList.remove('hidden');
+        document.getElementById('new-patient-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      document.getElementById('clinical-patient').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function cancelPatientEdit() {
+      state.editingPatientId = null;
+      document.getElementById('new-patient-form').reset();
+      document.querySelector('#new-patient-form h3').textContent = 'Registrar paciente';
+      document.querySelector('#new-patient-form button[type="submit"]').textContent = 'Guardar ficha';
+      document.getElementById('cancel-patient-edit').classList.add('hidden');
+    }
+
+    function renderClinicalRecord() {
+      const selector = document.getElementById('clinical-patient');
+      selector.replaceChildren();
+      clinicData.patients.forEach(patient => {
+        const option = document.createElement('option');
+        option.value = patient.id;
+        option.textContent = `${patient.name} · ${patient.age ?? '—'} años`;
+        selector.appendChild(option);
+      });
+      const patient = clinicData.patients.find(item => item.id === state.selectedClinicalPatientId) || clinicData.patients[0];
+      if (!patient) {
+        document.getElementById('clinical-alerts').classList.add('hidden');
+        document.getElementById('clinical-timeline').replaceChildren();
+        document.getElementById('odontogram').replaceChildren();
+        return;
+      }
+      state.selectedClinicalPatientId = patient.id;
+      selector.value = patient.id;
+      const alerts = document.getElementById('clinical-alerts');
+      alerts.textContent = `Alergias: ${patient.allergies || 'No indicado'} · Condiciones: ${patient.conditions || 'No indicado'} · Medicamentos: ${patient.medications || 'No indicado'} · Emergencia: ${patient.emergency || 'No indicado'}`;
+      alerts.classList.remove('hidden');
+      renderOdontogram();
+
+      const timeline = document.getElementById('clinical-timeline');
+      timeline.replaceChildren();
+      (patient.notes || []).slice().reverse().forEach(note => {
+        const article = document.createElement('article');
+        article.className = 'aero-soft rounded-lg px-3 py-2';
+        const heading = document.createElement('p');
+        heading.className = 'text-[10px] font-semibold text-teal-800';
+        heading.textContent = `${displayDate(note.date)} · Piezas ${note.teeth.length ? note.teeth.join(', ') : 'sin seleccionar'}`;
+        const body = document.createElement('p');
+        body.className = 'text-xs text-slate-700 mt-1 whitespace-pre-wrap';
+        body.textContent = note.text || 'Sin observaciones adicionales.';
+        article.append(heading, body);
+        if (note.plan) {
+          const plan = document.createElement('p');
+          plan.className = 'text-[11px] text-slate-600 mt-1';
+          plan.textContent = `Plan: ${note.plan}${note.followUp ? ` · Control: ${displayDate(note.followUp)}` : ''}`;
+          article.appendChild(plan);
+        }
+        timeline.appendChild(article);
+      });
+    }
+
+    function renderOdontogram() {
+      const grid = document.getElementById('odontogram');
+      grid.replaceChildren();
+      toothNumbers.forEach(number => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.tooth = number;
+        button.setAttribute('aria-pressed', String(state.selectedTeeth.has(number)));
+        button.className = `h-9 rounded-lg border text-[10px] font-bold transition ${state.selectedTeeth.has(number) ? 'border-teal-500 bg-teal-500 text-white shadow-sm' : 'border-slate-200 bg-white/70 text-slate-600 hover:border-teal-400 hover:text-teal-700'}`;
+        button.textContent = number;
+        button.title = `Pieza dental ${number}`;
+        grid.appendChild(button);
+      });
+      document.getElementById('selected-teeth').textContent = state.selectedTeeth.size ? `Piezas seleccionadas: ${[...state.selectedTeeth].sort((a, b) => a - b).join(', ')}` : 'Piezas seleccionadas: ninguna';
+    }
+
+    function toggleTooth(event) {
+      const button = event.target.closest('button[data-tooth]');
+      if (!button) return;
+      const number = Number(button.dataset.tooth);
+      if (state.selectedTeeth.has(number)) state.selectedTeeth.delete(number);
+      else state.selectedTeeth.add(number);
+      renderOdontogram();
+    }
+
+    function saveClinicalNote() {
+      const patient = clinicData.patients.find(item => item.id === state.selectedClinicalPatientId);
+      const input = document.getElementById('clinical-note');
+      const text = input.value.trim();
+      const plan = document.getElementById('clinical-plan').value.trim();
+      const followUp = document.getElementById('clinical-follow-up').value;
+      if (!patient || (!text && !plan)) {
+        document.getElementById('clinical-save-status').textContent = 'Selecciona un paciente y escribe una nota o un plan de tratamiento.';
+        return;
+      }
+      patient.notes = patient.notes || [];
+      patient.notes.push({ date: localISODate(), text, plan, followUp, teeth: [...state.selectedTeeth].sort((a, b) => a - b) });
+      patient.lastVisit = localISODate();
+      saveClinicData();
+      input.value = '';
+      document.getElementById('clinical-plan').value = '';
+      document.getElementById('clinical-follow-up').value = '';
+      state.selectedTeeth.clear();
+      document.getElementById('clinical-save-status').textContent = 'Evolución guardada en este navegador.';
+      renderAll();
+    }
+
+    function renderAppointments() {
+      const body = document.getElementById('appointment-rows');
+      body.replaceChildren();
+      const appointments = clinicData.appointments.slice().sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+      appointments.forEach(appointment => {
+        const row = document.createElement('tr');
+        row.append(
+          createCell(`${displayDate(appointment.date)} · ${appointment.time}`),
+          createCell(appointment.patientName, 'px-4 py-3 font-semibold text-slate-900'),
+          createCell(appointment.treatment),
+          createCell(appointment.doctor),
+          createCell(formatMoney(appointment.price), 'px-4 py-3 font-bold text-slate-800')
+        );
+        const statusCell = document.createElement('td');
+        statusCell.className = 'px-4 py-3';
+        const select = document.createElement('select');
+        select.dataset.appointmentId = appointment.id;
+        select.className = 'glass-input rounded-lg px-2 py-1 text-[11px]';
+        ['Confirmada', 'Atendida', 'Cancelada', 'No asistió'].forEach(status => {
+          const option = document.createElement('option');
+          option.value = status;
+          option.textContent = status;
+          select.appendChild(option);
+        });
+        select.value = appointment.status;
+        statusCell.appendChild(select);
+        row.appendChild(statusCell);
+        const actions = document.createElement('td');
+        actions.className = 'px-4 py-3';
+        const editButton = document.createElement('button');
+        editButton.type = 'button';
+        editButton.dataset.editAppointmentId = appointment.id;
+        editButton.className = 'text-[11px] font-semibold text-teal-700 hover:text-teal-900';
+        editButton.textContent = 'Reprogramar';
+        actions.appendChild(editButton);
+        const patient = clinicData.patients.find(item => item.id === appointment.patientId);
+        if (patient?.phone) {
+          const digits = patient.phone.replace(/\D/g, '');
+          const internationalNumber = digits.startsWith('0') ? `58${digits.slice(1)}` : digits.startsWith('58') ? digits : `58${digits}`;
+          const reminder = document.createElement('a');
+          reminder.href = `https://wa.me/${internationalNumber}?text=${encodeURIComponent(`Hola ${appointment.patientName}, le recordamos su cita en OdontoCare el ${displayDate(appointment.date)} a las ${appointment.time}.`)}`;
+          reminder.target = '_blank';
+          reminder.rel = 'noopener noreferrer';
+          reminder.className = 'ml-3 text-[11px] font-semibold text-emerald-700 hover:text-emerald-900';
+          reminder.textContent = 'Recordar';
+          actions.appendChild(reminder);
+        }
+        row.appendChild(actions);
+        body.appendChild(row);
+      });
+      document.getElementById('appointment-empty').classList.toggle('hidden', appointments.length > 0);
+      document.getElementById('appointment-total').textContent = `${appointments.length} citas`;
+    }
+
+    function updateAppointmentStatus(event) {
+      const select = event.target.closest('select[data-appointment-id]');
+      if (!select) return;
+      const appointment = clinicData.appointments.find(item => item.id === select.dataset.appointmentId);
+      if (!appointment) return;
+      appointment.status = select.value;
+      const appointmentPayment = clinicData.payments.find(payment => payment.appointmentId === appointment.id);
+      if (appointmentPayment?.status === 'Pendiente' && appointment.status === 'Cancelada') appointmentPayment.status = 'Anulado';
+      if (appointmentPayment?.status === 'Anulado' && !['Cancelada', 'No asistió'].includes(appointment.status)) appointmentPayment.status = 'Pendiente';
+      if (appointment.status === 'Atendida') {
+        const patient = clinicData.patients.find(item => item.id === appointment.patientId);
+        if (patient) {
+          patient.treatment = appointment.treatment;
+          patient.doctor = appointment.doctor;
+          patient.lastVisit = appointment.date;
+        }
+      }
+      saveClinicData();
+      renderAll();
+    }
+
+    function editAppointment(event) {
+      const button = event.target.closest('button[data-edit-appointment-id]');
+      if (!button) return;
+      const appointment = clinicData.appointments.find(item => item.id === button.dataset.editAppointmentId);
+      const patient = clinicData.patients.find(item => item.id === appointment?.patientId);
+      if (!appointment || !patient) return;
+
+      state.editingAppointmentId = appointment.id;
+      document.getElementById('patient-name').value = patient.name;
+      document.getElementById('patient-age').value = patient.age ?? '';
+      document.getElementById('patient-id').value = patient.document === 'Sin documento' ? '' : patient.document;
+      document.getElementById('patient-phone').value = patient.phone || '';
+      document.getElementById('patient-allergies').value = patient.allergies || '';
+      document.getElementById('patient-conditions').value = patient.conditions || '';
+      document.getElementById('patient-medications').value = patient.medications || '';
+      document.getElementById('patient-emergency').value = patient.emergency || '';
+      document.getElementById('consultation-reason').value = appointment.treatment;
+      state.selectedTreatmentPrice = Number(document.querySelector('#consultation-reason option:checked')?.dataset.price || 0);
+      state.selectedDate = new Date(`${appointment.date}T12:00:00`);
+      state.currentCalendarDate = new Date(state.selectedDate.getFullYear(), state.selectedDate.getMonth(), 1);
+      state.selectedTime = appointment.time;
+      const doctorRadio = [...document.querySelectorAll('input[name="doctor"]')].find(radio => radio.value === appointment.doctor);
+      if (doctorRadio) {
+        doctorRadio.checked = true;
+        doctorRadio.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      const payment = clinicData.payments.find(item => item.appointmentId === appointment.id);
+      const lockPrice = payment?.status === 'Pagado';
+      document.querySelectorAll('input[name="doctor"]').forEach(radio => { radio.disabled = lockPrice; });
+      document.getElementById('consultation-reason').disabled = lockPrice;
+      document.getElementById('booking-edit-note').classList.toggle('hidden', !lockPrice);
+      renderCalendar();
+      refreshBookedSlots();
+      document.querySelectorAll('.time-slot-btn').forEach(slot => {
+        const selected = slot.dataset.time === state.selectedTime;
+        slot.className = selected
+          ? 'time-slot-btn py-2 px-3 rounded-xl border-2 border-teal-500 bg-teal-500 text-white text-xs font-bold shadow-sm transition'
+          : 'time-slot-btn py-2 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-teal-500 transition';
+      });
+      document.getElementById('booking-button-label').textContent = 'Guardar cambios de cita';
+      document.getElementById('cancel-edit-booking').classList.remove('hidden');
+      updateSummary();
+      document.getElementById('agendar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function cancelBookingEdit() {
+      state.editingAppointmentId = null;
+      document.getElementById('booking-button-label').textContent = 'Confirmar cita y generar comprobante';
+      document.getElementById('cancel-edit-booking').classList.add('hidden');
+      document.getElementById('booking-edit-note').classList.add('hidden');
+      document.querySelectorAll('input[name="doctor"]').forEach(radio => { radio.disabled = false; });
+      document.getElementById('consultation-reason').disabled = false;
+      refreshBookedSlots();
+    }
+
+    function renderPrices() {
+      const list = document.getElementById('price-list');
+      list.replaceChildren();
+      treatmentCatalog.forEach(treatment => {
+        const item = document.createElement('article');
+        item.className = 'aero-soft rounded-xl p-3';
+        const name = document.createElement('p');
+        name.className = 'text-xs font-semibold text-slate-800';
+        name.textContent = treatment.name;
+        const price = document.createElement('p');
+        price.className = 'text-sm font-extrabold text-teal-700 mt-2';
+        price.textContent = `${formatMoney(treatment.price)} + consulta`;
+        const range = document.createElement('p');
+        range.className = 'text-[10px] text-slate-500 mt-0.5';
+        range.textContent = `Total con especialista: ${formatMoney(treatment.price + 25)}–${formatMoney(treatment.price + 45)}`;
+        item.append(name, price, range);
+        list.appendChild(item);
+      });
+    }
+
+    function renderFinances() {
+      const body = document.getElementById('payment-rows');
+      body.replaceChildren();
+      const filter = document.getElementById('finance-filter').value;
+      const visiblePayments = clinicData.payments.filter(payment => filter === 'all' || payment.status === filter);
+      const reportMonth = document.getElementById('report-month').value || localISODate().slice(0, 7);
+      const monthPayments = clinicData.payments.filter(payment => {
+        const appointment = clinicData.appointments.find(item => item.id === payment.appointmentId);
+        return (payment.paidAt || appointment?.date || '').startsWith(reportMonth);
+      });
+      const paidTotal = monthPayments.filter(payment => payment.status === 'Pagado').reduce((sum, payment) => sum + Number(payment.amount), 0);
+      const pendingTotal = monthPayments.filter(payment => payment.status === 'Pendiente').reduce((sum, payment) => sum + Number(payment.amount), 0);
+      document.getElementById('finance-paid').textContent = formatMoney(paidTotal);
+      document.getElementById('finance-pending').textContent = formatMoney(pendingTotal);
+      document.getElementById('finance-count').textContent = monthPayments.length;
+      const monthAppointments = clinicData.appointments.filter(appointment => appointment.date.startsWith(reportMonth));
+      document.getElementById('report-appointments').textContent = monthAppointments.length;
+      document.getElementById('report-completed').textContent = monthAppointments.filter(appointment => appointment.status === 'Atendida').length;
+      document.getElementById('report-patients').textContent = new Set(monthAppointments.map(appointment => appointment.patientId)).size;
+
+      visiblePayments.forEach(payment => {
+        const row = document.createElement('tr');
+        row.append(createCell(payment.patientName, 'px-4 py-3 font-semibold text-slate-900'), createCell(payment.concept), createCell(payment.method), createCell(formatMoney(payment.amount), 'px-4 py-3 font-bold'));
+        const status = createCell(payment.status);
+        status.className += payment.status === 'Pagado' ? ' text-emerald-700 font-semibold' : ' text-amber-700 font-semibold';
+        row.appendChild(status);
+        const action = document.createElement('td');
+        action.className = 'px-4 py-3';
+        if (payment.status === 'Pendiente') {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.dataset.paymentId = payment.id;
+          button.className = 'text-[11px] font-semibold text-teal-700 hover:text-teal-900';
+          button.textContent = 'Marcar pagado';
+          action.appendChild(button);
+        } else {
+          action.textContent = payment.reference ? `Ref. ${payment.reference}` : 'Registrado';
+        }
+        row.appendChild(action);
+        body.appendChild(row);
+      });
+      document.getElementById('payment-empty').classList.toggle('hidden', visiblePayments.length > 0);
+    }
+
+    function exportFinanceReport() {
+      const reportMonth = document.getElementById('report-month').value || localISODate().slice(0, 7);
+      const payments = clinicData.payments.filter(payment => {
+        const appointment = clinicData.appointments.find(item => item.id === payment.appointmentId);
+        return (payment.paidAt || appointment?.date || '').startsWith(reportMonth);
+      });
+      const rows = [['Paciente', 'Concepto', 'Fecha de cita', 'Método', 'Importe USD', 'Estado', 'Referencia']];
+      payments.forEach(payment => {
+        const appointment = clinicData.appointments.find(item => item.id === payment.appointmentId);
+        rows.push([payment.patientName, payment.concept, appointment?.date || payment.paidAt || '', payment.method, Number(payment.amount).toFixed(2), payment.status, payment.reference || '']);
+      });
+      const csv = rows.map(row => row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+      const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `odontocare-informe-${reportMonth}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function updatePaymentStatus(event) {
+      const button = event.target.closest('button[data-payment-id]');
+      if (!button) return;
+      const payment = clinicData.payments.find(item => item.id === button.dataset.paymentId);
+      if (!payment) return;
+      payment.status = 'Pagado';
+      payment.paidAt = localISODate();
+      saveClinicData();
+      renderFinances();
+    }
+
+    function refreshBookedSlots() {
+      const day = localISODate(state.selectedDate);
+      const slots = [...document.querySelectorAll('.time-slot-btn')];
+      let availableCount = 0;
+      slots.forEach(button => {
+        const booked = clinicData.appointments.some(appointment => appointment.id !== state.editingAppointmentId && appointment.date === day && appointment.time === button.dataset.time && appointment.doctor === state.selectedDoctor && !['Cancelada', 'No asistió'].includes(appointment.status));
+        button.disabled = booked;
+        button.title = booked ? 'Horario ya reservado para este especialista' : '';
+        button.classList.toggle('opacity-40', booked);
+        button.classList.toggle('cursor-not-allowed', booked);
+        if (!booked) availableCount++;
+      });
+      document.getElementById('slot-availability').textContent = availableCount ? `${availableCount} horarios disponibles para este especialista` : 'No quedan horarios para este día; selecciona otra fecha.';
+      document.getElementById('btn-confirm-and-download').disabled = availableCount === 0;
+    }
+
+    function saveBookingAndGenerateVoucher() {
+      const name = document.getElementById('patient-name').value.trim();
+      const documentNumber = document.getElementById('patient-id').value.trim();
+      const patientId = documentNumber || makeRecordId('PAC');
+      const date = localISODate(state.selectedDate);
+      const treatment = document.getElementById('consultation-reason').value;
+      const occupied = clinicData.appointments.some(appointment => appointment.id !== state.editingAppointmentId && appointment.date === date && appointment.time === state.selectedTime && appointment.doctor === state.selectedDoctor && !['Cancelada', 'No asistió'].includes(appointment.status));
+      if (!name) {
+        window.alert('Escribe el nombre del paciente antes de confirmar.');
+        return;
+      }
+      if (occupied) {
+        window.alert('Ese turno ya fue reservado. Selecciona otro horario.');
+        refreshBookedSlots();
+        return;
+      }
+
+      let patient = clinicData.patients.find(item => (documentNumber && item.document === documentNumber) || item.name.toLocaleLowerCase('es') === name.toLocaleLowerCase('es'));
+      const patientDetails = {
+        age: document.getElementById('patient-age').value ? Number(document.getElementById('patient-age').value) : null,
+        phone: document.getElementById('patient-phone').value.trim(),
+        document: documentNumber || patientId,
+        allergies: document.getElementById('patient-allergies').value.trim() || 'No indicado',
+        conditions: document.getElementById('patient-conditions').value.trim() || 'No indicado',
+        medications: document.getElementById('patient-medications').value.trim() || 'No indicado',
+        emergency: document.getElementById('patient-emergency').value.trim() || 'No indicado'
+      };
+      if (patient) Object.assign(patient, patientDetails);
+      else {
+        patient = { id: patientId, name, ...patientDetails, treatment: '', doctor: '', lastVisit: '', notes: [] };
+        clinicData.patients.push(patient);
+      }
+      let booking;
+      if (state.editingAppointmentId) {
+        booking = clinicData.appointments.find(item => item.id === state.editingAppointmentId);
+        Object.assign(booking, { patientId: patient.id, patientName: patient.name, doctor: state.selectedDoctor, treatment, price: getBookingTotal(), date, time: state.selectedTime, status: 'Confirmada' });
+        const payment = clinicData.payments.find(item => item.appointmentId === booking.id);
+        if (payment?.status === 'Pendiente') {
+          Object.assign(payment, { patientId: patient.id, patientName: patient.name, concept: treatment, amount: booking.price, method: state.selectedPayMethod });
+        }
+      } else {
+        booking = { id: makeRecordId('CITA'), patientId: patient.id, patientName: patient.name, doctor: state.selectedDoctor, treatment, price: getBookingTotal(), date, time: state.selectedTime, status: 'Confirmada' };
+        clinicData.appointments.push(booking);
+        clinicData.payments.push({ id: makeRecordId('PAGO'), appointmentId: booking.id, patientId: patient.id, patientName: patient.name, concept: treatment, amount: booking.price, method: state.selectedPayMethod, status: 'Pendiente', reference: document.getElementById('pay-reference').value.trim() });
+      }
+      state.editingAppointmentId = null;
+      document.getElementById('booking-button-label').textContent = 'Confirmar cita y generar comprobante';
+      document.getElementById('cancel-edit-booking').classList.add('hidden');
+      document.getElementById('booking-edit-note').classList.add('hidden');
+      document.querySelectorAll('input[name="doctor"]').forEach(radio => { radio.disabled = false; });
+      document.getElementById('consultation-reason').disabled = false;
+      state.selectedClinicalPatientId = patient.id;
+      saveClinicData();
+      renderAll();
+      generateVoucherPNG();
+    }
+
+    function getBookingTotal() {
+      return Number(state.selectedFee) + Number(state.selectedTreatmentPrice);
+    }
+
+    function exportBackup() {
+      const content = new Blob([JSON.stringify(clinicData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(content);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `odontocare-respaldo-${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const imported = JSON.parse(await file.text());
+        const valid = Array.isArray(imported.patients) && Array.isArray(imported.appointments) && Array.isArray(imported.payments);
+        if (!valid) throw new Error('El archivo no contiene pacientes, citas y pagos.');
+        if (!window.confirm('Restaurar este respaldo reemplazará los datos guardados en este navegador. ¿Continuar?')) return;
+        clinicData.patients = imported.patients;
+        clinicData.appointments = imported.appointments;
+        clinicData.payments = imported.payments;
+        state.selectedClinicalPatientId = null;
+        state.editingAppointmentId = null;
+        if (saveClinicData()) renderAll();
+      } catch (error) {
+        window.alert(`No se pudo restaurar el respaldo: ${error.message}`);
+      } finally {
+        event.target.value = '';
+      }
     }
 
     function updatePaymentBox(method) {
@@ -720,7 +1624,11 @@
 
       const pName = document.getElementById('patient-name').value.trim() || 'Paciente';
       document.getElementById('summary-patient').textContent = pName;
-      document.getElementById('summary-fee').textContent = `$${state.selectedFee.toFixed(2)}`;
+      const treatment = document.getElementById('consultation-reason');
+      const treatmentName = treatment.value;
+      state.selectedTreatmentPrice = Number(treatment.selectedOptions[0].dataset.price || state.selectedTreatmentPrice);
+      document.getElementById('summary-fee').textContent = formatMoney(getBookingTotal());
+      document.getElementById('summary-price-breakdown').textContent = `Consulta ${formatMoney(state.selectedFee)} + ${treatmentName} ${formatMoney(state.selectedTreatmentPrice)}`;
     }
 
     let generatedPNGUrl = null;
@@ -763,7 +1671,7 @@
 
       ctx.fillStyle = '#ccfbf1';
       ctx.font = '15px Inter, sans-serif';
-      ctx.fillText('COMPROBANTE OFICIAL DE CITA Y PAGO', 80, 138);
+      ctx.fillText('COMPROBANTE DE CITA ODONTOLÓGICA', 80, 138);
 
       // Badge de estado
       ctx.fillStyle = '#10b981';
@@ -771,7 +1679,7 @@
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 14px Inter, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('✓ CONFIRMADO', w - 160, 106);
+      ctx.fillText('CITA CONFIRMADA', w - 160, 106);
       ctx.textAlign = 'left';
 
       // Código y Fecha
@@ -820,21 +1728,21 @@
       ctx.stroke();
 
       // Sección Pago
-      drawHeading(ctx, 'DETALLES DEL PAGO REGISTRADO', 80, 580);
-      const ref = document.getElementById('pay-reference').value.trim() || 'REF-984210';
+      drawHeading(ctx, 'RESUMEN DEL COBRO', 80, 580);
+      const ref = document.getElementById('pay-reference').value.trim() || 'Pendiente';
       drawRow(ctx, 'Método:', state.selectedPayMethod, 80, 615);
       drawRow(ctx, 'Referencia:', ref, 440, 615);
-      drawRow(ctx, 'Estado:', 'Liquidado con éxito', 80, 655);
+      drawRow(ctx, 'Estado:', 'Pendiente de cobro', 80, 655);
 
       // Caja Total
       ctx.fillStyle = '#f1f5f9';
       roundRect(ctx, 440, 640, 280, 70, 10, true, false);
       ctx.fillStyle = '#475569';
       ctx.font = '12px Inter, sans-serif';
-      ctx.fillText('TOTAL ABONADO:', 455, 665);
+      ctx.fillText('TOTAL ESTIMADO:', 455, 665);
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 24px Inter, sans-serif';
-      ctx.fillText(`$${state.selectedFee.toFixed(2)} USD`, 455, 695);
+      ctx.fillText(`${formatMoney(getBookingTotal())} USD`, 455, 695);
 
       // Divisoria
       ctx.beginPath();
